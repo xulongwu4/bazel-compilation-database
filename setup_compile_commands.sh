@@ -204,7 +204,7 @@ if [ "$force" -eq 1 ] || [ ! -f "$current_file" ]; then
 #!/bin/bash
 set -e
 
-if [ "$#" -ne 1 ]; then
+if [ "$#" -lt 1 ]; then
     echo "Usage: $(basename $0) BAZEL_TARGET"
     exit 1
 fi
@@ -213,7 +213,7 @@ bazel build \
     --experimental_action_listener=//tools:generate_compile_commands_listener \
     --noshow_progress \
     --noshow_loading_progress \
-    $1 > /dev/null
+    $@ > /dev/null
 python3 $(dirname $0)/generate_compile_commands_json.py
 exit 0
 //MY_CODE_STREAM
