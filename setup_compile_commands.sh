@@ -207,6 +207,7 @@ bazel build \
 python3 $(dirname $0)/generate_compile_commands_json.py
 exit 0
 //MY_CODE_STREAM
+    chmod +x "$current_file"
 else 
 echo "File $current_file already exists, aborted! (you can use -f to force overwrite)" 
 exit 1
