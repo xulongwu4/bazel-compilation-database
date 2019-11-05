@@ -28,5 +28,6 @@ done
 echo "]" >> compile_commands.json
 
 jq . compile_commands.json > formatted_compile_commands.json && mv formatted_compile_commands.json compile_commands.json
-cp compile_commands.json $(bazel info workspace)
 popd > /dev/null
+
+cp $(bazel info execution_root)/compile_commands.json $(bazel info workspace)
