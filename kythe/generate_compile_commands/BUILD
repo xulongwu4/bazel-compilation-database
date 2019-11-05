@@ -10,7 +10,7 @@ action_listener(
 
 extra_action(
     name = "extra_action",
-    cmd = "extract_compile_command \
+    cmd = "./extract_compile_command \
         $(EXTRA_ACTION_FILE) \
         $(output $(ACTION_ID).compile_command.json)",
     data = [":extract_compile_command"],
