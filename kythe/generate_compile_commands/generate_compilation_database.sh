@@ -10,14 +10,22 @@ if [ "$#" -lt 1 ]; then
     exit 1
 fi
 
-bazel build $@ \
+WORKSPACE=$(bazel info workspace)
+TMPFILE=$(mktemp)
+bazel aquery $@ 2> /dev/null | rg Outputs | rg /bin/ > $TMPFILE
+KYTHE_WORKSPACE=$(head -n 1 $TMPFILE | cut -f 2 -d: | sed 's/[][]//g' | awk '{$1=$1};1')
+KYTHE_WORKSPACE=$WORKSPACE/${KYTHE_WORKSPACE%/bin/*}/extra_actions/kythe/generate_compile_commands
+rm -rf $TMPFILE
+
+bazel build \
   --experimental_action_listener=//kythe/generate_compile_commands:extract_json \
   --noshow_progress \
   --noshow_loading_progress \
-  #$@ > /dev/null
+  $@ > /dev/null
 
-pushd $(bazel info execution_root) > /dev/null
-echo "[" > compile_commands.json
+echo $KYTHE_WORKSPACE
+pushd $KYTHE_WORKSPACE > /dev/null
+echo "[" > $WORKSPACE/compile_commands.json
 COUNT=0
 find . -name '*.compile_command.json' -print0 | while read -r -d '' fname; do
   if ((COUNT++)); then
@@ -25,9 +33,9 @@ find . -name '*.compile_command.json' -print0 | while read -r -d '' fname; do
   fi
   cat "$fname" >> compile_commands.json
 done
-echo "]" >> compile_commands.json
-
-jq . compile_commands.json > formatted_compile_commands.json && mv formatted_compile_commands.json compile_commands.json
+echo "]" >> $WORKSPACE/compile_commands.json
 popd > /dev/null
 
-cp $(bazel info execution_root)/compile_commands.json $(bazel info workspace)
+pushd $WORKSPACE > /dev/null
+jq . compile_commands.json > formatted_compile_commands.json && mv formatted_compile_commands.json compile_commands.json
+popd > /dev/null
