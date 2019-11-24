@@ -30,13 +30,8 @@ KYTHE_WORKSPACE=$WORKSPACE/${KYTHE_WORKSPACE%/bin/*}/extra_actions/kythe/generat
 
 pushd $KYTHE_WORKSPACE > /dev/null
 echo "[" > $OUTFILE
-COUNT=0
-fd -0 -g '*.compile_command.json' | while read -r -d '' fname; do
-  if ((COUNT++)); then
-    echo ',' >> $OUTFILE
-  fi
-  cat "$fname" >> $OUTFILE
-done
+fd -g '*.compile_command.json' -x sed -e '$s/$/,/'>> $OUTFILE
+sed -i '$s/,$//' $OUTFILE
 echo "]" >> $OUTFILE
 
 jq . $OUTFILE > formatted.json && mv formatted.json $OUTFILE
