@@ -10,32 +10,35 @@ if [ "$#" -lt 1 ]; then
     exit 1
 fi
 
-WORKSPACE=$(bazel info workspace)
-TMPFILE=$(mktemp)
-bazel aquery $@ 2> /dev/null | rg Outputs | rg /bin/ > $TMPFILE
-KYTHE_WORKSPACE=$(head -n 1 $TMPFILE | cut -f 2 -d: | sed 's/[][]//g' | awk '{$1=$1};1')
-KYTHE_WORKSPACE=$WORKSPACE/${KYTHE_WORKSPACE%/bin/*}/extra_actions/kythe/generate_compile_commands
-rm -rf $TMPFILE
-
 bazel build \
   --experimental_action_listener=//kythe/generate_compile_commands:extract_json \
+  --nosandbox_debug \
   --noshow_progress \
   --noshow_loading_progress \
   $@ > /dev/null
 
-echo $KYTHE_WORKSPACE
+WORKSPACE=$(bazel info workspace)
+OUTFILE=$WORKSPACE/compile_commands.json
+TMPFILE=$(mktemp)
+bazel aquery \
+  --experimental_action_listener=//kythe/generate_compile_commands:extract_json \
+  --nosandbox_debug \
+  --noshow_progress \
+  --noshow_loading_progress \
+  $@ 2> /dev/null | rg Outputs | rg /bin/ > $TMPFILE
+KYTHE_WORKSPACE=$(head -n 1 $TMPFILE | cut -f 2 -d: | sed 's/[][]//g' | awk '{$1=$1};1')
+KYTHE_WORKSPACE=$WORKSPACE/${KYTHE_WORKSPACE%/bin/*}/extra_actions/kythe/generate_compile_commands
+
 pushd $KYTHE_WORKSPACE > /dev/null
-echo "[" > $WORKSPACE/compile_commands.json
+echo "[" > $OUTFILE
 COUNT=0
 find . -name '*.compile_command.json' -print0 | while read -r -d '' fname; do
   if ((COUNT++)); then
-    echo ',' >> compile_commands.json
+    echo ',' >> $OUTFILE
   fi
-  cat "$fname" >> compile_commands.json
+  cat "$fname" >> $OUTFILE
 done
-echo "]" >> $WORKSPACE/compile_commands.json
+echo "]" >> $OUTFILE
 popd > /dev/null
 
-pushd $WORKSPACE > /dev/null
-jq . compile_commands.json > formatted_compile_commands.json && mv formatted_compile_commands.json compile_commands.json
-popd > /dev/null
+jq . $OUTFILE > $TMPFILE && mv $TMPFILE $OUTFILE
