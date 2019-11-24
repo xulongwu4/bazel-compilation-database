@@ -7,6 +7,7 @@ if [ "$#" -lt 1 ]; then
 fi
 
 bazel build \
+    --color=yes \
     --experimental_action_listener=//tools:generate_compile_commands_listener \
     --nosandbox_debug \
     --noshow_progress \

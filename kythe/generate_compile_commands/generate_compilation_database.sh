@@ -11,6 +11,7 @@ if [ "$#" -lt 1 ]; then
 fi
 
 bazel build \
+  --color=yes \
   --experimental_action_listener=//kythe/generate_compile_commands:extract_json \
   --nosandbox_debug \
   --noshow_progress \
@@ -19,26 +20,24 @@ bazel build \
 
 WORKSPACE=$(bazel info workspace)
 OUTFILE=$WORKSPACE/compile_commands.json
-TMPFILE=$(mktemp)
-bazel aquery \
+KYTHE_WORKSPACE=$(bazel aquery \
   --experimental_action_listener=//kythe/generate_compile_commands:extract_json \
   --nosandbox_debug \
-  --noshow_progress \
-  --noshow_loading_progress \
-  $@ 2> /dev/null | rg Outputs | rg /bin/ > $TMPFILE
-KYTHE_WORKSPACE=$(head -n 1 $TMPFILE | cut -f 2 -d: | sed 's/[][]//g' | awk '{$1=$1};1')
+  $@ 2> /dev/null \
+  | rg Outputs | rg /bin/ | tail -1 \
+  | cut -f 2 -d: | sed 's/[][]//g' | awk '{$1=$1};1')
 KYTHE_WORKSPACE=$WORKSPACE/${KYTHE_WORKSPACE%/bin/*}/extra_actions/kythe/generate_compile_commands
 
 pushd $KYTHE_WORKSPACE > /dev/null
 echo "[" > $OUTFILE
 COUNT=0
-find . -name '*.compile_command.json' -print0 | while read -r -d '' fname; do
+fd -0 -g '*.compile_command.json' | while read -r -d '' fname; do
   if ((COUNT++)); then
     echo ',' >> $OUTFILE
   fi
   cat "$fname" >> $OUTFILE
 done
 echo "]" >> $OUTFILE
-popd > /dev/null
 
-jq . $OUTFILE > $TMPFILE && mv $TMPFILE $OUTFILE
+jq . $OUTFILE > formatted.json && mv formatted.json $OUTFILE
+popd > /dev/null
