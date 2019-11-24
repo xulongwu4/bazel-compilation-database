@@ -26,13 +26,10 @@ KYTHE_WORKSPACE=$(bazel aquery \
   $@ 2> /dev/null \
   | rg Outputs | rg /bin/ | tail -1 \
   | cut -f 2 -d: | sed 's/[][]//g' | awk '{$1=$1};1')
-KYTHE_WORKSPACE=$WORKSPACE/${KYTHE_WORKSPACE%/bin/*}/extra_actions/kythe/generate_compile_commands
+KYTHE_WORKSPACE=${KYTHE_WORKSPACE%/bin/*}/extra_actions/kythe/generate_compile_commands
 
-pushd $KYTHE_WORKSPACE > /dev/null
-echo "[" > $OUTFILE
-fd -g '*.compile_command.json' -x sed -e '$s/$/,/'>> $OUTFILE
-sed -i '$s/,$//' $OUTFILE
-echo "]" >> $OUTFILE
+python3 $(dirname $0)/generate_compile_commands_json.py $WORKSPACE $KYTHE_WORKSPACE
 
+pushd $WORKSPACE > /dev/null
 jq . $OUTFILE > formatted.json && mv formatted.json $OUTFILE
 popd > /dev/null
