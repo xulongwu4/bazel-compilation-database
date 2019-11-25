@@ -29,7 +29,4 @@ KYTHE_WORKSPACE=$(bazel aquery \
 KYTHE_WORKSPACE=${KYTHE_WORKSPACE%/bin/*}/extra_actions/kythe/generate_compile_commands
 
 python3 $(dirname $0)/generate_compile_commands_json.py $WORKSPACE $KYTHE_WORKSPACE
-
-pushd $WORKSPACE > /dev/null
-jq . $OUTFILE > formatted.json && mv formatted.json $OUTFILE
-popd > /dev/null
+jq . $OUTFILE > $WORKSPACE/formatted.json && mv $WORKSPACE/formatted.json $OUTFILE
