@@ -28,9 +28,9 @@
 #include "google/protobuf/io/zero_copy_stream.h"
 #include "google/protobuf/io/zero_copy_stream_impl.h"
 #include "google/protobuf/stubs/common.h"
+#include "kythe/generate_compile_commands/extra_actions_base.pb.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
-#include "third_party/bazel/src/main/protobuf/extra_actions_base.pb.h"
 
 namespace {
 using ::google::protobuf::io::CodedInputStream;

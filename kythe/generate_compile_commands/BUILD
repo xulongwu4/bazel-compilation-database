@@ -1,9 +1,25 @@
 # Build file for tools integrating Bazel with clang tooling.
 
-# Extracts a single compile command from an extra action.
-sh_binary(
-    name = "extract_compile_command_binary",
-    srcs = ["extract_compile_command"],
+proto_library(
+    name = "extra_actions_base_proto",
+    srcs = ["extra_actions_base.proto"],
+)
+
+cc_proto_library(
+    name = "extra_actions_base_cc_proto",
+    deps = [":extra_actions_base_proto"],
+)
+
+cc_binary(
+    name = "extract_compile_command",
+    srcs = ["extract_compile_command.cc"],
+    deps = [
+        ":extra_actions_base_cc_proto",
+        "@com_github_glog_glog//:glog",
+        "@com_github_tencent_rapidjson//:rapidjson",
+        "@com_google_absl//absl/strings:str_format",
+        "@com_google_protobuf//:protobuf",
+    ],
 )
 
 action_listener(
@@ -15,9 +31,9 @@ action_listener(
 
 extra_action(
     name = "extra_action",
-    cmd = "$(location :extract_compile_command_binary) \
+    cmd = "$(location :extract_compile_command) \
         $(EXTRA_ACTION_FILE) \
         $(output $(ACTION_ID).compile_command.json)",
     out_templates = ["$(ACTION_ID).compile_command.json"],
-    tools = [":extract_compile_command_binary"],
+    tools = [":extract_compile_command"],
 )
