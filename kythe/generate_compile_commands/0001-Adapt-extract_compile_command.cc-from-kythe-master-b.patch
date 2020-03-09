@@ -1,0 +1,28 @@
+From 525ad3ac500b2a5ac25ed8ef83712e856abd200f Mon Sep 17 00:00:00 2001
+From: Longwu Ou <xulongwu4@gmail.com>
+Date: Mon, 9 Mar 2020 12:54:34 -0400
+Subject: [PATCH] Adapt extract_compile_command.cc from kythe master branch to
+ be used in other projects.
+
+---
+ .../tools/generate_compile_commands/extract_compile_command.cc  | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/kythe/cxx/tools/generate_compile_commands/extract_compile_command.cc b/kythe/cxx/tools/generate_compile_commands/extract_compile_command.cc
+index 269fa2dbe..312b3814a 100644
+--- a/kythe/cxx/tools/generate_compile_commands/extract_compile_command.cc
++++ b/kythe/cxx/tools/generate_compile_commands/extract_compile_command.cc
+@@ -28,9 +28,9 @@
+ #include "google/protobuf/io/zero_copy_stream.h"
+ #include "google/protobuf/io/zero_copy_stream_impl.h"
+ #include "google/protobuf/stubs/common.h"
++#include "kythe/generate_compile_commands/extra_actions_base.pb.h"
+ #include "rapidjson/stringbuffer.h"
+ #include "rapidjson/writer.h"
+-#include "third_party/bazel/src/main/protobuf/extra_actions_base.pb.h"
+ 
+ namespace {
+ using ::google::protobuf::io::CodedInputStream;
+-- 
+2.25.1
+

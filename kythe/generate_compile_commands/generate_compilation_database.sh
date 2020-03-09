@@ -22,5 +22,10 @@ WORKSPACE=$(bazel info workspace 2>/dev/null)
 OUTFILE=$WORKSPACE/compile_commands.json
 KYTHE_WORKSPACE=$(bazel info bazel-bin 2>/dev/null)/../extra_actions/kythe/generate_compile_commands
 
-python3 $(dirname $0)/generate_compile_commands_json.py $WORKSPACE $KYTHE_WORKSPACE
+echo "[" > $OUTFILE
+find $KYTHE_WORKSPACE -name '*.compile_command.json' -exec cat {} \+ >> $OUTFILE
+sed -i "s/@BAZEL_ROOT@/$BAZEL_ROOT/g" $OUTFILE
+sed -i "s/}/},\n/g" $OUTFILE
+sed -i "$ s/},/}/g" $OUTFILE
+echo "]" >> $OUTFILE
 jq . $OUTFILE > $WORKSPACE/formatted.json && mv $WORKSPACE/formatted.json $OUTFILE
