@@ -30,6 +30,5 @@ echo "]" >> $OUTFILE
 # Use `jq` to format the compilation database
 if hash jq 2>/dev/null; then
     TMPFILE=$(mktemp)
-    jq . $OUTFILE > $TMPFILE && cp $TMPFILE $OUTFILE
-    rm $TMPFILE
+    jq . $OUTFILE > $TMPFILE && mv $TMPFILE $OUTFILE || rm $TMPFILE
 fi
