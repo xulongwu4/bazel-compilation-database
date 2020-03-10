@@ -27,5 +27,5 @@ sed -i "s/}/},\n/g" $OUTFILE
 sed -i "$ s/},/}/g" $OUTFILE
 echo "]" >> $OUTFILE
 
-TMPFILE=$(basename $OUTFILE .json).$(date +"%Y.%m.%d-%H.%M.%S").json
+TMPFILE=$(mktemp)
 jq . $OUTFILE > $WORKSPACE/$TMPFILE && mv $WORKSPACE/$TMPFILE $OUTFILE
