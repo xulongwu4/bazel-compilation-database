@@ -5,26 +5,22 @@
 
 set -e
 
-if [ "$#" -lt 1 ]; then
-    echo "Usage: $(basename $0) BAZEL_TARGET"
-    exit 1
-fi
-
 bazel build \
   --color=yes \
   --experimental_action_listener=//kythe/generate_compile_commands:extract_json \
   --nosandbox_debug \
   --noshow_progress \
   --noshow_loading_progress \
-  $@ > /dev/null
+  $(bazel query 'kind(cc_.*, //...) - attr(tags, manual, //...) - //kythe/...' 2>/dev/null) > /dev/null
 
 WORKSPACE=$(bazel info workspace 2>/dev/null)
 OUTFILE=$WORKSPACE/compile_commands.json
 KYTHE_WORKSPACE=$(bazel info bazel-bin 2>/dev/null)/../extra_actions/kythe/generate_compile_commands
+BAZEL_ROOT=$(bazel info execution_root 2>/dev/null)
 
 echo "[" > $OUTFILE
 find $KYTHE_WORKSPACE -name '*.compile_command.json' -exec cat {} \+ >> $OUTFILE
-sed -i "s/@BAZEL_ROOT@/$BAZEL_ROOT/g" $OUTFILE
+sed -i "s|@BAZEL_ROOT@|$BAZEL_ROOT|g" $OUTFILE
 sed -i "s/}/},\n/g" $OUTFILE
 sed -i "$ s/},/}/g" $OUTFILE
 echo "]" >> $OUTFILE
