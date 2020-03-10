@@ -5,6 +5,13 @@
 
 set -e
 
+WORKSPACE=$(bazel info workspace 2>/dev/null)
+OUTFILE=$WORKSPACE/compile_commands.json
+KYTHE_WORKSPACE=$(bazel info bazel-bin 2>/dev/null)/../extra_actions/kythe/generate_compile_commands
+BAZEL_ROOT=$(bazel info execution_root 2>/dev/null)
+
+find $KYTHE_WORKSPACE -name '*.compile_command.json' -delete
+
 bazel build \
   --color=yes \
   --experimental_action_listener=//kythe/generate_compile_commands:extract_json \
@@ -12,11 +19,6 @@ bazel build \
   --noshow_progress \
   --noshow_loading_progress \
   $(bazel query 'kind(cc_.*, //...) - attr(tags, manual, //...) - //kythe/...' 2>/dev/null) > /dev/null
-
-WORKSPACE=$(bazel info workspace 2>/dev/null)
-OUTFILE=$WORKSPACE/compile_commands.json
-KYTHE_WORKSPACE=$(bazel info bazel-bin 2>/dev/null)/../extra_actions/kythe/generate_compile_commands
-BAZEL_ROOT=$(bazel info execution_root 2>/dev/null)
 
 echo "[" > $OUTFILE
 find $KYTHE_WORKSPACE -name '*.compile_command.json' -exec cat {} \+ >> $OUTFILE
