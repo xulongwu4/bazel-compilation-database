@@ -28,4 +28,4 @@ sed -i "$ s/},/}/g" $OUTFILE
 echo "]" >> $OUTFILE
 
 TMPFILE=$(mktemp)
-jq . $OUTFILE > $WORKSPACE/$TMPFILE && mv $WORKSPACE/$TMPFILE $OUTFILE
+jq . $OUTFILE > $TMPFILE && mv $TMPFILE $OUTFILE
