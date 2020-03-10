@@ -26,4 +26,6 @@ sed -i "s|@BAZEL_ROOT@|$BAZEL_ROOT|g" $OUTFILE
 sed -i "s/}/},\n/g" $OUTFILE
 sed -i "$ s/},/}/g" $OUTFILE
 echo "]" >> $OUTFILE
-jq . $OUTFILE > $WORKSPACE/formatted.json && mv $WORKSPACE/formatted.json $OUTFILE
+
+TMPFILE=$(basename $OUTFILE .json).$(date +"%Y.%m.%d-%H.%M.%S").json
+jq . $OUTFILE > $WORKSPACE/$TMPFILE && mv $WORKSPACE/$TMPFILE $OUTFILE
