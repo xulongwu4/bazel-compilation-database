@@ -27,6 +27,7 @@ sed -i "s/}/},\n/g" $OUTFILE
 sed -i "$ s/},/}/g" $OUTFILE
 echo "]" >> $OUTFILE
 
+# Use `jq` to format the compilation database
 if hash jq 2>/dev/null; then
     TMPFILE=$(mktemp)
     jq . $OUTFILE > $TMPFILE && cp $TMPFILE $OUTFILE
