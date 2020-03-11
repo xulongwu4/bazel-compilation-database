@@ -22,9 +22,9 @@ bazel build \
 
 echo "[" > $OUTFILE
 find $KYTHE_WORKSPACE -name '*.compile_command.json' -exec cat {} \+ >> $OUTFILE
+echo -e "\n]" >> $OUTFILE
 sed -i "s|@BAZEL_ROOT@|$BAZEL_ROOT|g" $OUTFILE
 sed -i "s/}{/},\n{/g" $OUTFILE
-echo -e "\n]" >> $OUTFILE
 
 # Use `jq` to format the compilation database
 if hash jq 2>/dev/null; then
