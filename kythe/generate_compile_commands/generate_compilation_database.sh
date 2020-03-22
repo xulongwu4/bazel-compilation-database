@@ -10,7 +10,7 @@ OUTFILE=$WORKSPACE/compile_commands.json
 KYTHE_WORKSPACE=$(bazel info bazel-bin 2>/dev/null)/../extra_actions/kythe/generate_compile_commands
 BAZEL_ROOT=$(bazel info execution_root 2>/dev/null)
 
-find $KYTHE_WORKSPACE -name '*.compile_command.json' -delete
+[ -d $KYTHE_WORKSPACE ] && find $KYTHE_WORKSPACE -name '*.compile_command.json' -delete
 
 bazel build \
   --color=yes \
