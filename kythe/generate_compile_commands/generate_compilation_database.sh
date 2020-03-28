@@ -21,7 +21,7 @@ bazel build \
   $(bazel query 'kind(cc_.*, //...) - attr(tags, manual, //...) - //kythe/...' 2>/dev/null) > /dev/null
 
 echo "[" > $OUTFILE
-find $KYTHE_WORKSPACE -name '*.compile_command.json' -exec cat {} \+ >> $OUTFILE
+find $KYTHE_WORKSPACE -name '*.compile_command.json' -exec cat {} + >> $OUTFILE
 echo -e "\n]" >> $OUTFILE
 sed -i "s|@BAZEL_ROOT@|$BAZEL_ROOT|g" $OUTFILE
 sed -i "s/}{/},\n{/g" $OUTFILE
