@@ -45,21 +45,23 @@ bazel build \
     --noshow_loading_progress \
     $BUILD_TARGETS >>"$LOG_FILE" 2>&1
 
+TMPFILE=$(mktemp)
+echo "[" >"$TMPFILE"
+find "$KYTHE_WORKSPACE" -name '*.compile_command.json' -exec cat {} + >>"$TMPFILE"
+echo -e '\n]' >>"$TMPFILE"
+sed -i "s|@BAZEL_ROOT@|$BAZEL_ROOT|g" "$TMPFILE"
+sed -i 's/}{/},\n{/g' "$TMPFILE"
+sed -i 's/-Werror/-Wno-unused-function -Werror/g' "$TMPFILE"
+
 OUTFILE=$WORKSPACE/compile_commands.json
-echo "[" >"$OUTFILE"
-find "$KYTHE_WORKSPACE" -name '*.compile_command.json' -exec cat {} + >>"$OUTFILE"
-echo -e '\n]' >>"$OUTFILE"
-sed -i "s|@BAZEL_ROOT@|$BAZEL_ROOT|g" "$OUTFILE"
-sed -i 's/}{/},\n{/g' "$OUTFILE"
-sed -i 's/-Werror/-Wno-unused-function -Werror/g' "$OUTFILE"
 
 # Use `jq` to format the compilation database
 if hash jq 2>/dev/null; then
     printInfo "Formatting compilation database ..."
-    TMPFILE=$(mktemp)
-    jq . "$OUTFILE" >"$TMPFILE" && mv "$TMPFILE" "$OUTFILE" || rm "$TMPFILE"
+    jq . "$TMPFILE" >"$OUTFILE"
 else
     printInfo "Can not find jq. Skip formatting compilation database."
+    cp --no-preserve=mode "$TMPFILE" "$OUTFILE"
 fi
 
-rm "$LOG_FILE"
+rm "$LOG_FILE" "$TMPFILE"
