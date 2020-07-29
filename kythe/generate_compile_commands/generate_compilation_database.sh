@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/usr/bin/env sh
 
 # Generates a compile_commands.json file at $(bazel info execution_root) for
 # your Clang tooling needs.
@@ -15,8 +15,8 @@ log_err() {
     printError "See log file at $LOG_FILE"
 }
 
-set -eE
-trap log_err ERR
+set -e
+trap '[ $? -eq 0 ] || log_err' EXIT
 
 LOG_FILE=$(mktemp)
 
@@ -45,9 +45,9 @@ bazel build \
     $BUILD_TARGETS >>"$LOG_FILE" 2>&1
 
 TMPFILE=$(mktemp)
-echo "[" >"$TMPFILE"
+printf '[\n' >"$TMPFILE"
 find "$KYTHE_WORKSPACE" -name '*.compile_command.json' -exec cat {} + >>"$TMPFILE"
-echo -e '\n]' >>"$TMPFILE"
+printf '\n]\n' >>"$TMPFILE"
 sed -i "s|@BAZEL_ROOT@|$BAZEL_ROOT|g" "$TMPFILE"
 sed -i 's/}{/},\n{/g' "$TMPFILE"
 sed -i 's/-Werror/-Wno-unused-function -Werror/g' "$TMPFILE"
