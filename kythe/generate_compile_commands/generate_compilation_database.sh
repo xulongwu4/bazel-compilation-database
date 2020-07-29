@@ -11,13 +11,12 @@ printInfo() {
     printf '\e[1;32mINFO:\e[0m %s\n' "$@"
 }
 
-err_exit() {
-    local EXIT_STATUS=$?
+log_err() {
     printError "See log file at $LOG_FILE"
-    exit $EXIT_STATUS
 }
 
-trap err_exit ERR
+set -eE
+trap log_err ERR
 
 LOG_FILE=$(mktemp)
 
