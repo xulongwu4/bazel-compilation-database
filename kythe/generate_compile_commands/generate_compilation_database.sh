@@ -4,11 +4,11 @@
 # your Clang tooling needs.
 
 printError() {
-    printf '\e[1;31mERROR:\e[0m %s\n' "$@"
+    printf '\033[31mERROR:\033[0m %s\n' "$@"
 }
 
 printInfo() {
-    printf '\e[1;32mINFO:\e[0m %s\n' "$@"
+    printf '\033[32mINFO:\033[0m %s\n' "$@"
 }
 
 log_err() {
