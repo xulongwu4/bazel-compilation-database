@@ -1,7 +1,7 @@
 #!/usr/bin/env sh
 
 # Generates a compile_commands.json file at $(bazel info execution_root) for
-# your Clang tooling needs.
+# your clang tooling needs.
 
 printError() {
     printf '\033[31mERROR:\033[0m %s\n' "$@"
