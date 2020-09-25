@@ -31,5 +31,5 @@ run the python script `tools/generate_compilation_database.sh` in the workspace
 directory to generate the compilation database:
 
 ```sh
-tools/generate_compilation_database.sh ...
+tools/generate_compilation_database.sh
 ```
