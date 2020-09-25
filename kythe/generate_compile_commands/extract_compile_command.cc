@@ -22,8 +22,6 @@
 #include <string>
 #include <vector>
 
-#include "absl/strings/str_format.h"
-#include "glog/logging.h"
 #include "google/protobuf/io/coded_stream.h"
 #include "google/protobuf/io/zero_copy_stream.h"
 #include "google/protobuf/io/zero_copy_stream_impl.h"
@@ -36,8 +34,8 @@ namespace {
 using ::google::protobuf::io::CodedInputStream;
 using ::google::protobuf::io::FileInputStream;
 
-bool ReadExtraAction(const std::string& path, blaze::ExtraActionInfo* info,
-                     blaze::CppCompileInfo* cpp_info) {
+bool ReadExtraAction(const std::string &path, blaze::ExtraActionInfo *info,
+                     blaze::CppCompileInfo *cpp_info) {
   int fd = ::open(path.c_str(), O_RDONLY, S_IREAD | S_IWRITE);
   if (fd < 0) {
     perror("Failed to open input: ");
@@ -47,16 +45,18 @@ bool ReadExtraAction(const std::string& path, blaze::ExtraActionInfo* info,
   file_input.SetCloseOnDelete(true);
 
   CodedInputStream input(&file_input);
-  if (!info->ParseFromCodedStream(&input)) return false;
+  if (!info->ParseFromCodedStream(&input))
+    return false;
   if (!info->HasExtension(blaze::CppCompileInfo::cpp_compile_info))
     return false;
   *cpp_info = info->GetExtension(blaze::CppCompileInfo::cpp_compile_info);
   return true;
 }
 
-std::string JoinCommand(const std::vector<std::string>& command) {
+std::string JoinCommand(const std::vector<std::string> &command) {
   std::string output;
-  if (command.empty()) return output;
+  if (command.empty())
+    return output;
 
   // TODO(shahms): Deal with embedded spaces and quotes.
   auto iter = command.begin();
@@ -67,8 +67,8 @@ std::string JoinCommand(const std::vector<std::string>& command) {
   return output;
 }
 
-std::string FormatCompilationCommand(const std::string& source_file,
-                                     const std::vector<std::string>& command) {
+std::string FormatCompilationCommand(const std::string &source_file,
+                                     const std::vector<std::string> &command) {
   rapidjson::StringBuffer buffer;
   rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
   writer.StartObject();
@@ -81,20 +81,21 @@ std::string FormatCompilationCommand(const std::string& source_file,
   writer.EndObject();
   return buffer.GetString();
 }
-}  // namespace
+} // namespace
 
-int main(int argc, char** argv) {
+int main(int argc, char **argv) {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
-  google::InitGoogleLogging(argv[0]);
   if (argc != 3) {
-    absl::FPrintF(stderr, "usage: %s extra-action-file output-file\n", argv[0]);
+    std::cerr << "usage: " << argv[0] << " extra-action-file output-file"
+              << std::endl;
     return 1;
   }
   std::string extra_action_file = argv[1];
   std::string output_file = argv[2];
   blaze::ExtraActionInfo info;
   blaze::CppCompileInfo cpp_info;
-  if (!ReadExtraAction(extra_action_file, &info, &cpp_info)) return 1;
+  if (!ReadExtraAction(extra_action_file, &info, &cpp_info))
+    return 1;
 
   std::vector<std::string> args;
   args.push_back(cpp_info.tool());
@@ -109,7 +110,7 @@ int main(int argc, char** argv) {
     args.push_back(cpp_info.output_file());
   }
 
-  FILE* output = ::fopen(output_file.c_str(), "w");
+  FILE *output = ::fopen(output_file.c_str(), "w");
   if (output == nullptr) {
     perror("Unable to open file for writing: ");
     return 1;
