@@ -27,8 +27,8 @@ kythe/generate_compile_commands/generate_compilation_database.sh
 ### Approach 2: `python`-based method
 
 Copy (or symlink) the `tools` directory to the workspace of your project. Then
-run the python script `tools/generate_compilation_database.sh` in the workspace
-directory to generate the compilation database:
+run the script `tools/generate_compilation_database.sh` in the workspace directory
+to generate the compilation database:
 
 ```sh
 tools/generate_compilation_database.sh
