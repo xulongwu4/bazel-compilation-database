@@ -14,6 +14,9 @@ load_kythe_deps()
 One can generate the compilation database by using the following command in
 the workspace directory:
 
-```bash
+```sh
 kythe/generate_compile_commands/generate_compilation_database.sh
 ```
+
+It is highly recommended to have [`jq`](https://github.com/stedolan/jq) installed
+so that the generated `compile_commands.json` is formatted nicely.
