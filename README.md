@@ -2,6 +2,10 @@
 
 ## Usage
 
+Pick one of the following approaches. It is highly recommended to have
+[`jq`](https://github.com/stedolan/jq) installed
+so that the generated `compile_commands.json` is formatted nicely.
+
 ### Approach 1: `cpp`-based method
 
 Copy (or symlink) the `kythe` directory to the workspace of your project. Then add
@@ -19,9 +23,6 @@ the workspace directory:
 ```sh
 kythe/generate_compile_commands/generate_compilation_database.sh
 ```
-
-It is highly recommended to have [`jq`](https://github.com/stedolan/jq) installed
-so that the generated `compile_commands.json` is formatted nicely.
 
 ### Approach 2: `python`-based method
 
