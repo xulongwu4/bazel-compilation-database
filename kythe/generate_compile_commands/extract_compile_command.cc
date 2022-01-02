@@ -69,13 +69,17 @@ std::string JoinCommand(const std::vector<std::string> &command) {
 
 std::string FormatCompilationCommand(const std::string &source_file,
                                      const std::vector<std::string> &command) {
+  if (source_file.find("external/") ==
+      0) {  // Do not include compilation commands for depdendencies
+    return {};
+  }
   rapidjson::StringBuffer buffer;
   rapidjson::Writer<rapidjson::StringBuffer> writer(buffer);
   writer.StartObject();
   writer.Key("file");
   writer.String(source_file.c_str());
   writer.Key("directory");
-  writer.String("@BAZEL_ROOT@");
+  writer.String("@WORKSPACE@");
   writer.Key("command");
   writer.String(JoinCommand(command).c_str());
   writer.EndObject();

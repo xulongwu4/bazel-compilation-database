@@ -28,6 +28,9 @@ def _get_command(path, command_directory):
         if len(contents) != 2:
             # Old/incomplete file or something; silently ignore it.
             return None
+        if contents[1].startswith("external/"):
+            # Do not include compilation commands for depdendencies
+            return None
         return """{
     "directory": "%s",
     "command": "%s",
@@ -58,11 +61,7 @@ def main():
         ("bazel", "info", "bazel-bin")).decode("utf-8").rstrip()
     action_outs = os.path.join(bazel_bin_path, "../extra_actions",
                                "tools/generate_compile_commands_action")
-    command_directory = subprocess.check_output(
-        ("bazel", "info", "execution_root"),
-        cwd=source_path).decode("utf-8").rstrip()
-    commands = _get_compile_commands(pathlib.Path(action_outs),
-                                     command_directory)
+    commands = _get_compile_commands(pathlib.Path(action_outs), source_path)
     with open(os.path.join(source_path, "compile_commands.json"), "w") as f:
         f.write("[\n{}\n]\n".format(",\n".join(commands)))
 

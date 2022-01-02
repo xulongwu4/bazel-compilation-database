@@ -26,12 +26,12 @@ printInfo "Fetching workspace info ..."
 
 WORKSPACE=$(bazel info workspace 2>"$LOG_FILE")
 KYTHE_WORKSPACE=$(bazel info bazel-bin 2>>"$LOG_FILE")/../extra_actions/kythe/generate_compile_commands
-BAZEL_ROOT=$(bazel info execution_root 2>>"$LOG_FILE")
+BAZEL_OUTPUT_BASE=$(bazel info output_base 2>>"$LOG_FILE")
 
 [ -d "$KYTHE_WORKSPACE" ] && find "$KYTHE_WORKSPACE" -name '*.compile_command.json' -delete
 
 printInfo "Querying build targets ..."
-BUILD_TARGETS=$(bazel query 'kind(cc_.*, //...) - attr(tags, manual, //...) - //kythe/...' 2>>"$LOG_FILE")
+BUILD_TARGETS=$(bazel cquery 'kind(cc_.*, //...) - attr(tags, manual, //...) - //kythe/...' 2>>"$LOG_FILE" | sed "s/([^)]*)//g")
 
 printInfo "Building compilation database ..."
 # Do not use double quotes around $BUILD_TARGETS, so shell will perform field splitting and remove newlines between
@@ -48,7 +48,8 @@ TMPFILE=$(mktemp)
 printf '[\n' >"$TMPFILE"
 find "$KYTHE_WORKSPACE" -name '*.compile_command.json' -exec cat {} + >>"$TMPFILE"
 printf '\n]\n' >>"$TMPFILE"
-sed -i "s|@BAZEL_ROOT@|$BAZEL_ROOT|g" "$TMPFILE"
+sed -i "s|@WORKSPACE@|$WORKSPACE|g" "$TMPFILE"
+sed -i "s| external/| $BAZEL_OUTPUT_BASE/external/|g" "$TMPFILE"
 sed -i 's/}{/},\n{/g' "$TMPFILE"
 sed -i 's/-Werror/-Wno-unused-function -Werror/g' "$TMPFILE"
 

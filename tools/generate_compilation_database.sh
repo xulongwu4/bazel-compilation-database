@@ -30,7 +30,7 @@ TOOLS_WORKSPACE=$(bazel info bazel-bin 2>>"$LOGFILE")/../extra_actions/tools/gen
 [ -d "$TOOLS_WORKSPACE" ] && find "$TOOLS_WORKSPACE" -name '*_compile_command' -delete
 
 printInfo "Querying build targets ..."
-BUILD_TARGETS=$(bazel query 'kind(cc_.*, //...) - attr(tags, manual, //...) - //tools/...' 2>>"$LOGFILE")
+BUILD_TARGETS=$(bazel cquery 'kind(cc_.*, //...) - attr(tags, manual, //...) - //tools/...' 2>>"$LOGFILE" | sed "s/([^)]*)//g")
 
 printInfo "Building compilation database ..."
 # Do not use double quotes around $BUILD_TARGETS, so shell will perform field splitting and remove newlines between
@@ -45,12 +45,15 @@ bazel build \
 
 python3 "$(dirname "$0")"/generate_compile_commands_json.py >>"$LOGFILE" 2>&1
 
+WORKSPACE=$(bazel info workspace 2>"$LOGFILE")
+OUTFILE=$WORKSPACE/compile_commands.json
+BAZEL_OUTPUT_BASE=$(bazel info output_base 2>>"$LOGFILE")
+sed -i "s| external/| $BAZEL_OUTPUT_BASE/external/|g" "$OUTFILE"
+
 if hash jq 2>/dev/null; then
     # Use `jq` to format the compilation database
     printInfo "Formatting compilation database ..."
     TMPFILE=$(mktemp)
-    WORKSPACE=$(bazel info workspace 2>"$LOGFILE")
-    OUTFILE=$WORKSPACE/compile_commands.json
     jq . "$OUTFILE" >"$TMPFILE" && cp --no-preserve=mode "$TMPFILE" "$OUTFILE" && rm "$TMPFILE"
 else
     printInfo "Can not find jq. Skip formatting compilation database."
