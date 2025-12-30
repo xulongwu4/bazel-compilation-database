@@ -39,3 +39,8 @@ extra_action(
     out_templates = ["$(ACTION_ID).compile_command.json"],
     tools = [":extract_compile_command"],
 )
+
+sh_binary(
+    name = "generate_compile_commands",
+    srcs = ["generate_compilation_database.sh"]
+)

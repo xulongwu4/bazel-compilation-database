@@ -24,21 +24,25 @@ printInfo "Log file: $LOG_FILE"
 
 printInfo "Fetching workspace info ..."
 
+printInfo "$BUILD_WORKSPACE_DIRECTORY"
+cd "$BUILD_WORKSPACE_DIRECTORY"
+printInfo "$PWD"
+
 WORKSPACE=$(bazel info workspace 2>"$LOG_FILE")
-KYTHE_WORKSPACE=$(bazel info bazel-bin 2>>"$LOG_FILE")/../extra_actions/kythe/generate_compile_commands
+KYTHE_WORKSPACE=$(bazel info bazel-bin 2>>"$LOG_FILE")/../extra_actions/generate_compile_commands
 BAZEL_OUTPUT_BASE=$(bazel info output_base 2>>"$LOG_FILE")
 
 [ -d "$KYTHE_WORKSPACE" ] && find "$KYTHE_WORKSPACE" -name '*.compile_command.json' -delete
 
 printInfo "Querying build targets ..."
-BUILD_TARGETS=$(bazel cquery 'kind(cc_.*, //...) - attr(tags, manual, //...) - //kythe/...' 2>>"$LOG_FILE" | sed "s/([^)]*)//g")
+BUILD_TARGETS=$(bazel cquery 'kind(cc_.*, //...) - attr(tags, manual, //...)' 2>>"$LOG_FILE" | sed "s/([^)]*)//g")
 
 printInfo "Building compilation database ..."
 # Do not use double quotes around $BUILD_TARGETS, so shell will perform field splitting and remove newlines between
 # build targets
 bazel build \
     --color=yes \
-    --experimental_action_listener=//kythe/generate_compile_commands:extract_json \
+    --experimental_action_listener=@bazel_compile_commands_generator//generate_compile_commands:extract_json \
     --nosandbox_debug \
     --noshow_progress \
     --noshow_loading_progress \
