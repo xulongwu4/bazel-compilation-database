@@ -11,7 +11,7 @@ module(
     repo_name = "bazel_compile_commands_generator",
 )
 
-bazel_dep(name = "rules_cc", version = "0.1.1")
-bazel_dep(name = "protobuf", version = "30.1")
-bazel_dep(name = "rules_proto", version = "7.1.0")
-bazel_dep(name = "rapidjson", version = "1.1.0.bcr.20250205")
+# bazel_dep(name = "rules_cc", version = "0.1.1")
+# bazel_dep(name = "protobuf", version = "30.1")
+# bazel_dep(name = "rules_proto", version = "7.1.0")
+# bazel_dep(name = "rapidjson", version = "1.1.0.bcr.20250205")
