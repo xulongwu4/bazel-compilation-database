@@ -24,9 +24,13 @@ printInfo "Log file: $LOG_FILE"
 
 printInfo "Fetching workspace info ..."
 
-printInfo "$PWD"
+if [ -z "${BUILD_WORKSPACE_DIRECTORY}" ]; then
+    echo "The environment variable BUILD_WORKSPACE_DIRECTORY is not set. Did you invoke the script using 'bazel run'?" >>"$LOG_FILE" 2>&1
+    exit 1
+fi
 
-WORKSPACE=$(bazel info workspace 2>"$LOG_FILE")
+WORKSPACE="$BUILD_WORKSPACE_DIRECTORY"
+cd "$WORKSPACE"
 COMPILATION_DATABASE_LOCATION=$(bazel info bazel-bin 2>>"$LOG_FILE")/../extra_actions/generate_compile_commands
 BAZEL_OUTPUT_BASE=$(bazel info output_base 2>>"$LOG_FILE")
 
