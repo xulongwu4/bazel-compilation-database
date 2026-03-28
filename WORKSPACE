@@ -1,1 +1,1 @@
-workspace(name = "compilation_database_generator")
+workspace(name = "compile_commands_generator")

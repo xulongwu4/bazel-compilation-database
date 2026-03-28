@@ -33,14 +33,15 @@ BAZEL_OUTPUT_BASE=$(bazel info output_base 2>>"$LOG_FILE")
 [ -d "$COMPILATION_DATABASE_LOCATION" ] && find "$COMPILATION_DATABASE_LOCATION" -name '*.compile_command.json' -delete
 
 printInfo "Querying build targets ..."
-BUILD_TARGETS=$(bazel cquery 'kind(cc_.*, //...) - attr(tags, manual, //...) - @generate-compile-commands//...' 2>>"$LOG_FILE" | sed "s/([^)]*)//g")
+# BUILD_TARGETS=$(bazel cquery 'kind(cc_.*, //...) - attr(tags, manual, //...) - @compile_commands_generator//...' 2>>"$LOG_FILE" | sed "s/([^)]*)//g")
+BUILD_TARGETS=$(bazel cquery 'kind(cc_.*, //...) - attr(tags, manual, //...)' 2>>"$LOG_FILE" | sed "s/([^)]*)//g")
 
 printInfo "Building compilation database ..."
 # Do not use double quotes around $BUILD_TARGETS, so shell will perform field splitting and remove newlines between
 # build targets
 bazel build \
     --color=yes \
-    --experimental_action_listener=@generate-compile-commands//generate_compile_commands:extract_json \
+    --experimental_action_listener=@compile_commands_generator//generate_compile_commands:extract_json \
     --nosandbox_debug \
     --noshow_progress \
     --noshow_loading_progress \
@@ -48,7 +49,7 @@ bazel build \
 
 TMPFILE=$(mktemp)
 printf '[\n' >"$TMPFILE"
-find "$COMPILATION_DATABASE_LOCATION" -name '*.compile_command.json' -exec cat {} + >>"$TMPFILE"
+find "$COMPILATION_DATABASE_LOCATION" -name '*.compile_command.json' -exec cat {} + >>"$TMPFILE" 2>>"$LOG_FILE"
 printf '\n]\n' >>"$TMPFILE"
 sed -i "s|@WORKSPACE@|$WORKSPACE|g" "$TMPFILE"
 sed -i "s| external/| $BAZEL_OUTPUT_BASE/external/|g" "$TMPFILE"
