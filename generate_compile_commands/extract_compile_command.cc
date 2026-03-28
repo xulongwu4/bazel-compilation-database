@@ -22,11 +22,11 @@
 #include <string>
 #include <vector>
 
+#include "generate_compile_commands/extra_actions_base.pb.h"
 #include "google/protobuf/io/coded_stream.h"
 #include "google/protobuf/io/zero_copy_stream.h"
 #include "google/protobuf/io/zero_copy_stream_impl.h"
 #include "google/protobuf/stubs/common.h"
-#include "kythe/generate_compile_commands/extra_actions_base.pb.h"
 #include "rapidjson/stringbuffer.h"
 #include "rapidjson/writer.h"
 
@@ -70,7 +70,7 @@ std::string JoinCommand(const std::vector<std::string> &command) {
 std::string FormatCompilationCommand(const std::string &source_file,
                                      const std::vector<std::string> &command) {
   if (source_file.find("external/") ==
-      0) {  // Do not include compilation commands for depdendencies
+      0) { // Do not include compilation commands for depdendencies
     return {};
   }
   rapidjson::StringBuffer buffer;
