@@ -1,7 +1,7 @@
 # Build file for tools integrating Bazel with clang tooling.
 
-load("@rules_proto//proto:defs.bzl", "proto_library")
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_proto_library")
+load("@rules_proto//proto:defs.bzl", "proto_library")
 
 proto_library(
     name = "extra_actions_base_proto",
@@ -37,4 +37,9 @@ extra_action(
         $(output $(ACTION_ID).compile_command.json)",
     out_templates = ["$(ACTION_ID).compile_command.json"],
     tools = [":extract_compile_command"],
+)
+
+sh_binary(
+    name = "generate_compilation_database",
+    srcs = ["generate_compilation_database.sh"],
 )
