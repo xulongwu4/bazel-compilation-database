@@ -1,6 +1,5 @@
 # Build file for tools integrating Bazel with clang tooling.
 
-load("@bazel_tools//tools/shell:sh_binary.bzl", "sh_binary")
 load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_proto_library")
 load("@rules_proto//proto:defs.bzl", "proto_library")
 
