@@ -6,6 +6,14 @@ load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 def download_transitive_dependencies():
     maybe(
         http_archive,
+        name = "rules_shell",
+        sha256 = "3709d1745ba4be4ef054449647b62e424267066eca887bb00dd29242cb8463a0",
+        strip_prefix = "rules_shell-0.7.1",
+        url = "https://github.com/bazelbuild/rules_shell/releases/download/v0.7.1/rules_shell-v0.7.1.tar.gz",
+    )
+
+    maybe(
+        http_archive,
         name = "protobuf",
         sha256 = "9c0fd39c7a08dff543c643f0f4baf081988129a411b977a07c46221793605638",
         strip_prefix = "protobuf-3.20.3",
