@@ -2,6 +2,11 @@
 
 ## Usage
 
+> [!NOTE]
+>
+> Use the `workspace` branch for older versions of bazel that use the
+> `WORKSPACE` file
+
 Add the following lines to the `MODULE.bazel` file of the project:
 
 ```bzl
