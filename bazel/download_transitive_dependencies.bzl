@@ -7,9 +7,9 @@ def download_transitive_dependencies():
     maybe(
         http_archive,
         name = "bazel_features",
-        sha256 = "ccf85bbf0613d12bf6df2c8470ecec544a6fe8ceab684e970e8ed4dde4cb24ec",
-        strip_prefix = "bazel_features-1.44.0",
-        url = "https://github.com/bazel-contrib/bazel_features/releases/download/v1.44.0/bazel_features-v1.44.0.tar.gz",
+        sha256 = "3a900b9d62f19c6168c41694268e93cca355d1d35fae48c6d13eb7947026a35b",
+        strip_prefix = "bazel_features-1.16.0",
+        url = "https://github.com/bazel-contrib/bazel_features/releases/download/v1.16.0/bazel_features-v1.16.0.tar.gz",
     )
 
     maybe(
