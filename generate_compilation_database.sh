@@ -31,7 +31,7 @@ fi
 
 WORKSPACE="$BUILD_WORKSPACE_DIRECTORY"
 cd "$WORKSPACE"
-COMPILATION_DATABASE_LOCATION=$(bazel info bazel-bin 2>>"$LOG_FILE")/../extra_actions/generate_compile_commands
+COMPILATION_DATABASE_LOCATION=$(bazel info bazel-bin 2>>"$LOG_FILE")/../extra_actions
 BAZEL_OUTPUT_BASE=$(bazel info output_base 2>>"$LOG_FILE")
 
 [ -d "$COMPILATION_DATABASE_LOCATION" ] && find "$COMPILATION_DATABASE_LOCATION" -name '*.compile_command.json' -delete
@@ -45,7 +45,7 @@ printInfo "Building compilation database ..."
 # build targets
 bazel build \
     --color=yes \
-    --experimental_action_listener=@compile_commands_generator//generate_compile_commands:extract_json \
+    --experimental_action_listener=@compile_commands_generator//:extract_json \
     --nosandbox_debug \
     --noshow_progress \
     --noshow_loading_progress \
