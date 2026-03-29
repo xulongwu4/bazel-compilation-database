@@ -1,12 +1,4 @@
-# Build file for tools integrating Bazel with clang tooling.
-
-# load("@bazel_tools//tools/build_defs/shell:sh_binary.bzl", "sh_binary")
-# load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_proto_library")
-
-# load("@rules_proto//proto:defs.bzl", "cc_proto_library", "proto_library")
-# load("@rules_sh//sh:sh_binary.bzl", "sh_binary")
-
-# load("@protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
+# Tested with bazel 8.3.1
 
 proto_library(
     name = "extra_actions_base_proto",
