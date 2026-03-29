@@ -14,6 +14,14 @@ def download_transitive_dependencies():
 
     maybe(
         http_archive,
+        name = "rules_cc",
+        sha256 = "283fa1cdaaf172337898749cf4b9b1ef5ea269da59540954e51fba0e7b8f277a",
+        strip_prefix = "rules_cc-0.2.17",
+        url = "https://github.com/bazelbuild/rules_cc/releases/download/0.2.17/rules_cc-0.2.17.tar.gz",
+    )
+
+    maybe(
+        http_archive,
         name = "protobuf",
         sha256 = "9c0fd39c7a08dff543c643f0f4baf081988129a411b977a07c46221793605638",
         strip_prefix = "protobuf-3.20.3",
