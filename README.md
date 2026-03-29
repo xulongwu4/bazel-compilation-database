@@ -13,7 +13,7 @@ Add the following lines to the `MODULE.bazel` file of the project:
 bazel_dep(name = "compile_commands_generator", dev_dependency = True)
 git_override(
     module_name = "compile_commands_generator",
-    branch = "lo/bazel-repo-MODULE",
+    branch = "main",
     remote = "https://github.com/xulongwu4/bazel-compilation-database.git",
 )
 ```
