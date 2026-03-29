@@ -12,7 +12,7 @@ Add the following lines to the `WORKSPACE` file of the project:
 ```bzl
 git_repository(
     name = "compile_commands_generator",
-    branch = "lo/bazel-repo-WORKSPACE",
+    branch = "workspace",
     remote = "https://github.com/xulongwu4/bazel-compilation-database.git"
 )
 
