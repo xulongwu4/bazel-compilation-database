@@ -6,10 +6,10 @@ load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 def download_transitive_dependencies():
     maybe(
         http_archive,
-        name = "com_google_protobuf",
-        sha256 = "9c0fd39c7a08dff543c643f0f4baf081988129a411b977a07c46221793605638",
-        strip_prefix = "protobuf-3.20.3",
-        url = "https://github.com/protocolbuffers/protobuf/archive/refs/tags/v3.20.3.tar.gz",
+        name = "protobuf",
+        sha256 = "ccff8964efdc4052f0b3579ad503dba28729c28fb0cf4245c060ec17667666aa",
+        strip_prefix = "protobuf-3.29.5",
+        url = "https://github.com/protocolbuffers/protobuf/archive/refs/tags/v3.29.5.tar.gz",
     )
 
     maybe(
