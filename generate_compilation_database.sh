@@ -62,13 +62,6 @@ sed -i 's/-Werror/-Wno-unused-function -Werror/g' "$TMPFILE"
 
 OUTFILE=$WORKSPACE/compile_commands.json
 
-# Use `jq` to format the compilation database
-if hash jq 2>/dev/null; then
-    printInfo "Formatting compilation database ..."
-    jq . "$TMPFILE" >"$OUTFILE"
-else
-    printInfo "Can not find jq. Skip formatting compilation database."
-    cp --no-preserve=mode "$TMPFILE" "$OUTFILE"
-fi
+cp --no-preserve=mode "$TMPFILE" "$OUTFILE"
 
 rm "$LOG_FILE" "$TMPFILE"
