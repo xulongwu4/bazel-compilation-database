@@ -1,5 +1,3 @@
-# Tested with bazel 8.3.1
-
 load("@rules_shell//shell:sh_binary.bzl", "sh_binary")
 
 sh_binary(

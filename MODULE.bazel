@@ -1,3 +1,5 @@
+# Tested with bazel 8.3.1 and 9.0.0
+
 module(
     name = "compile_commands_generator",
 )
