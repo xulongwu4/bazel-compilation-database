@@ -2,6 +2,10 @@
 
 # Tested with bazel 6.4.0
 
+load("@com_google_protobuf//bazel:cc_proto_library.bzl", "cc_proto_library")
+load("@com_google_protobuf//bazel:proto_library.bzl", "proto_library")
+load("@rules_cc//cc:cc_binary.bzl", "cc_binary")
+
 proto_library(
     name = "extra_actions_base_proto",
     srcs = ["extra_actions_base.proto"],
