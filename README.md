@@ -2,22 +2,15 @@
 
 ## Usage
 
-Add the following lines to the `WORKSPACE` file of the project:
+Add the following lines to the `MODULE.bazel` file of the project:
 
 ```bzl
-git_repository(
-    name = "compile_commands_generator",
-    branch = "lo/bazel-repo-WORKSPACE",
-    remote = "https://github.com/xulongwu4/bazel-compilation-database.git"
+bazel_dep(name = "compile_commands_generator", dev_dependency = True)
+git_override(
+    module_name = "compile_commands_generator",
+    branch = "lo/bazel-repo-MODULE",
+    remote = "https://github.com/xulongwu4/bazel-compilation-database.git",
 )
-
-load("@compile_commands_generator//:download_transitive_dependencies.bzl", "download_transitive_dependencies")
-
-download_transitive_dependencies()
-
-load("@compile_commands_generator//:setup_cdb_generator.bzl", "setup_cdb_generator")
-
-setup_cdb_generator()
 ```
 
 Then run the following command to generate the compilation database:

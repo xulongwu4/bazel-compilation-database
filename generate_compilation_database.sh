@@ -31,13 +31,12 @@ fi
 
 WORKSPACE="$BUILD_WORKSPACE_DIRECTORY"
 cd "$WORKSPACE"
-COMPILATION_DATABASE_LOCATION=$(bazel info bazel-bin 2>>"$LOG_FILE")/../extra_actions
+COMPILATION_DATABASE_LOCATION=$(bazel info bazel-bin 2>>"$LOG_FILE")/../extra_actions/extractor
 BAZEL_OUTPUT_BASE=$(bazel info output_base 2>>"$LOG_FILE")
 
 [ -d "$COMPILATION_DATABASE_LOCATION" ] && find "$COMPILATION_DATABASE_LOCATION" -name '*.compile_command.json' -delete
 
 printInfo "Querying build targets ..."
-# BUILD_TARGETS=$(bazel cquery 'kind(cc_.*, //...) - attr(tags, manual, //...) - @compile_commands_generator//...' 2>>"$LOG_FILE" | sed "s/([^)]*)//g")
 BUILD_TARGETS=$(bazel cquery 'kind(cc_.*, //...) - attr(tags, manual, //...)' 2>>"$LOG_FILE" | sed "s/([^)]*)//g")
 
 printInfo "Building compilation database ..."
@@ -45,7 +44,7 @@ printInfo "Building compilation database ..."
 # build targets
 bazel build \
     --color=yes \
-    --experimental_action_listener=@compile_commands_generator//:extract_json \
+    --experimental_action_listener=@compile_commands_generator//extractor:extract_json \
     --nosandbox_debug \
     --noshow_progress \
     --noshow_loading_progress \
