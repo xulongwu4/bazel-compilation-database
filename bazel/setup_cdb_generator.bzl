@@ -7,5 +7,5 @@ def setup_cdb_generator():
     bazel_features_deps()
     rules_shell_dependencies()
     rules_shell_toolchains()
-    protobuf_deps()
     compatibility_proxy_repo()
+    protobuf_deps()
