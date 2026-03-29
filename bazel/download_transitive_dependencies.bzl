@@ -22,6 +22,14 @@ def download_transitive_dependencies():
 
     maybe(
         http_archive,
+        name = "rules_python",
+        sha256 = "2f5c284fbb4e86045c2632d3573fc006facbca5d1fa02976e89dc0cd5488b590",
+        strip_prefix = "rules_python-1.6.3",
+        url = "https://github.com/bazel-contrib/rules_python/releases/download/1.6.3/rules_python-1.6.3.tar.gz",
+    )
+
+    maybe(
+        http_archive,
         name = "protobuf",
         sha256 = "ccff8964efdc4052f0b3579ad503dba28729c28fb0cf4245c060ec17667666aa",
         strip_prefix = "protobuf-3.29.5",
