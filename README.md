@@ -11,11 +11,11 @@ git_repository(
     remote = "https://github.com/xulongwu4/bazel-compilation-database.git"
 )
 
-load("@compile_commands_generator//:download_transitive_dependencies.bzl", "download_transitive_dependencies")
+load("@compile_commands_generator//bazel:download_transitive_dependencies.bzl", "download_transitive_dependencies")
 
 download_transitive_dependencies()
 
-load("@compile_commands_generator//:setup_cdb_generator.bzl", "setup_cdb_generator")
+load("@compile_commands_generator//bazel:setup_cdb_generator.bzl", "setup_cdb_generator")
 
 setup_cdb_generator()
 ```

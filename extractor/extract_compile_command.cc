@@ -22,7 +22,7 @@
 #include <string>
 #include <vector>
 
-#include "extra_actions_base.pb.h"
+#include "extractor/extra_actions_base.pb.h"
 #include "google/protobuf/io/coded_stream.h"
 #include "google/protobuf/io/zero_copy_stream.h"
 #include "google/protobuf/io/zero_copy_stream_impl.h"
