@@ -1,22 +1,22 @@
-licenses(["notice"])
-
-package(default_visibility = ["//visibility:public"])
+licenses(["notice"])  # MIT
 
 filegroup(
-    name = "license",
-    srcs = ["license.txt"],
+    name = "bin",
+    srcs = glob(["bin/**"]),
+    visibility = ["//:__subpackages__"],
 )
 
 cc_library(
     name = "rapidjson",
-    hdrs = glob([
-        "include/rapidjson/*.h",
-        "include/rapidjson/*/*.h",
-    ]),
-    copts = [
-        "-Wno-non-virtual-dtor",
-        "-Wno-unused-variable",
-        "-Wno-implicit-fallthrough",
-    ],
+    srcs = glob(["include/rapidjson/internal/*.h"]),
+    hdrs = glob(
+        include = [
+            "include/rapidjson/**/*.h",
+        ],
+        exclude = [
+            "include/rapidjson/internal/*.h",
+        ],
+    ),
     includes = ["include"],
+    visibility = ["//visibility:public"],
 )
