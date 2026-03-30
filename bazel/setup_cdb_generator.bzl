@@ -1,4 +1,5 @@
 load("@bazel_features//:deps.bzl", "bazel_features_deps")
+load("@bazel_features//private:repos.bzl", "bazel_features_repos")
 load("@protobuf//:protobuf_deps.bzl", "protobuf_deps")
 load("@rules_cc//cc:extensions.bzl", "compatibility_proxy_repo")
 load("@rules_python//python:repositories.bzl", "py_repositories")
@@ -6,6 +7,7 @@ load("@rules_shell//shell:repositories.bzl", "rules_shell_dependencies", "rules_
 
 def setup_cdb_generator():
     bazel_features_deps()
+    bazel_features_repos()
     compatibility_proxy_repo()
     rules_shell_dependencies()
     rules_shell_toolchains()
