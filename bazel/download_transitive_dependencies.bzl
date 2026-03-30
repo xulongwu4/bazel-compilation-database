@@ -31,9 +31,9 @@ def download_transitive_dependencies():
     maybe(
         http_archive,
         name = "protobuf",
-        sha256 = "ccff8964efdc4052f0b3579ad503dba28729c28fb0cf4245c060ec17667666aa",
-        strip_prefix = "protobuf-3.29.5",
-        url = "https://github.com/protocolbuffers/protobuf/archive/refs/tags/v3.29.5.tar.gz",
+        sha256 = "136a07aad488cc502b11c4416fe4a7df2dfdea1d0833a7a8211000bf952728ba",
+        strip_prefix = "protobuf-33.4",
+        url = "https://github.com/protocolbuffers/protobuf/archive/refs/tags/v33.4.tar.gz",
     )
 
     maybe(
