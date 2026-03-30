@@ -4,6 +4,7 @@ module(
     name = "compile_commands_generator",
 )
 
+bazel_dep(name = "rules_cc", version = "0.1.1")
 bazel_dep(name = "rules_shell", version = "0.7.1")
 bazel_dep(name = "protobuf", version = "33.4")
 bazel_dep(name = "rapidjson", version = "1.1.0.bcr.20250205")
