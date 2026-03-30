@@ -6,6 +6,14 @@ load("@bazel_tools//tools/build_defs/repo:utils.bzl", "maybe")
 def download_transitive_dependencies():
     maybe(
         http_archive,
+        name = "bazel_features",
+        sha256 = "c41853e3b636c533b86bf5ab4658064e6cc9db0a3bce52cbff0629e094344ca9",
+        strip_prefix = "bazel_features-1.33.0",
+        url = "https://github.com/bazel-contrib/bazel_features/releases/download/v1.33.0/bazel_features-v1.33.0.tar.gz",
+    )
+
+    maybe(
+        http_archive,
         name = "rules_cc",
         sha256 = "8dcd63392f0bb48adf74f413a9f39ba0fedcb8f99bf085a3b450f06d171dbb6d",
         strip_prefix = "rules_cc-0.2.4",
