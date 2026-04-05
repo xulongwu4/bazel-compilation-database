@@ -44,6 +44,7 @@ if [ -z "$BUILD_TARGETS" ]; then
     printInfo "No items to be included in the compilation database"
     rm -rf "OUTFILE"
     touch "$OUTFILE"
+    exit 0
 fi
 
 printInfo "Building compilation database ..."
