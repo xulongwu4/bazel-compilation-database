@@ -32,12 +32,19 @@ fi
 WORKSPACE="$BUILD_WORKSPACE_DIRECTORY"
 cd "$WORKSPACE"
 COMPILATION_DATABASE_LOCATION=$(bazel info bazel-bin 2>>"$LOG_FILE")/../extra_actions/extractor
+OUTFILE=$WORKSPACE/compile_commands.json
+
 BAZEL_OUTPUT_BASE=$(bazel info output_base 2>>"$LOG_FILE")
 
 [ -d "$COMPILATION_DATABASE_LOCATION" ] && find "$COMPILATION_DATABASE_LOCATION" -name '*.compile_command.json' -delete
 
 printInfo "Querying build targets ..."
 BUILD_TARGETS=$(bazel cquery 'kind(cc_.*, //...) - attr(tags, manual, //...)' 2>>"$LOG_FILE" | sed "s/([^)]*)//g")
+if [ -z "$BUILD_TARGETS" ]; then
+    printInfo "No items to be included in the compilation database"
+    rm -rf "OUTFILE"
+    touch "$OUTFILE"
+fi
 
 printInfo "Building compilation database ..."
 # Do not use double quotes around $BUILD_TARGETS, so shell will perform field splitting and remove newlines between
@@ -58,8 +65,6 @@ sed -i "s|@WORKSPACE@|$WORKSPACE|g" "$TMPFILE"
 sed -i "s| external/| $BAZEL_OUTPUT_BASE/external/|g" "$TMPFILE"
 sed -i 's/}{/},\n{/g' "$TMPFILE"
 sed -i 's/-Werror/-Wno-unused-function -Werror/g' "$TMPFILE"
-
-OUTFILE=$WORKSPACE/compile_commands.json
 
 cp --no-preserve=mode "$TMPFILE" "$OUTFILE"
 
