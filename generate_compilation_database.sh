@@ -35,6 +35,7 @@ COMPILATION_DATABASE_LOCATION=$(bazel info bazel-bin 2>>"$LOG_FILE")/../extra_ac
 OUTFILE=$WORKSPACE/compile_commands.json
 
 BAZEL_OUTPUT_BASE=$(bazel info output_base 2>>"$LOG_FILE")
+BAZEL_OUTPUT_PATH=$(bazel info output_path 2>>"$LOG_FILE")
 
 [ -d "$COMPILATION_DATABASE_LOCATION" ] && find "$COMPILATION_DATABASE_LOCATION" -name '*.compile_command.json' -delete
 
@@ -64,6 +65,7 @@ find "$COMPILATION_DATABASE_LOCATION" -name '*.compile_command.json' -exec cat {
 printf '\n]\n' >>"$TMPFILE"
 sed -i "s|@WORKSPACE@|$WORKSPACE|g" "$TMPFILE"
 sed -i "s| external/| $BAZEL_OUTPUT_BASE/external/|g" "$TMPFILE"
+sed -i "s|bazel-out|$BAZEL_OUTPUT_PATH|g" "$TMPFILE"
 sed -i 's/}{/},\n{/g' "$TMPFILE"
 sed -i 's/-Werror/-Wno-unused-function -Werror/g' "$TMPFILE"
 
