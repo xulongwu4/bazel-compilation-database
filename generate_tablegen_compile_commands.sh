@@ -42,7 +42,7 @@ get_includes_for_target() {
 
     for dep_target in $(bazel query "labels(deps, \"$target\")" 2>>"$LOG_FILE"); do
         package=$(dirname "$(bazel query --output=location "$dep_target" 2>>"$LOG_FILE" | cut -d: -f1)")
-        for include in $(bazel query --output=build "$dep_target" | grep "includes =" | sed 's/.*includes = \[\(.*\)\].*/\1/' | tr -d '"' | sed 's/, */\n/g'); do
+        for include in $(bazel query --output=build "$dep_target" 2>>"$LOG_FILE" | grep "includes =" | sed 's/.*includes = \[\(.*\)\].*/\1/' | tr -d '"' | sed 's/, */\n/g'); do
             if [ -z "$include" ]; then
                 continue
             fi
