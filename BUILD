@@ -6,3 +6,8 @@ sh_binary(
     name = "generate_compilation_database",
     srcs = ["generate_compilation_database.sh"],
 )
+
+sh_binary(
+    name = "generate_tablegen_compile_commands",
+    srcs = ["generate_tablegen_compile_commands.sh"],
+)
